@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owen Guo — Career Navigator</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:wght@400;700;900&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  .pw-gate {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    font-family: 'Noto Serif', Georgia, serif;
+  }
+  .pw-gate img { width: 120px; margin-bottom: 24px; }
+  .pw-gate input {
+    font-size: 1.1rem; padding: 10px 16px; border: 2px solid #1a1a1a;
+    text-align: center; font-family: inherit; outline: none; width: 240px;
+  }
+  .pw-gate input:focus { border-color: #c00; }
+  .pw-gate .pw-hint { margin-top: 12px; font-size: 0.82rem; color: #888; font-style: italic; }
+  .pw-gate .pw-error { color: #c00; font-size: 0.85rem; margin-top: 8px; visibility: hidden; }
+  .pw-gate .pw-error.show { visibility: visible; }
+  body.locked > *:not(.pw-gate):not(script) { display: none !important; }
+<style>
+  :root {
+    --bg: #fff;
+    --surface: #fafafa;
+    --surface2: #f0f0f0;
+    --border: #d9d9d9;
+    --text: #1a1a1a;
+    --text-dim: #666;
+    --accent: #c00;
+    --accent2: #333;
+    --gold: #8a6d00;
+    --coral: #c00;
+    --green: #2a7a2a;
+    --purple: #555;
+    --orange: #a05a00;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; cursor: var(--cat-cursor, auto); }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+  /* Masthead */
+  .masthead {
+    text-align: center;
+    padding: 16px 0 14px;
+    border-bottom: 2px solid #1a1a1a;
+    position: relative;
+  }
+  .masthead-cat {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    opacity: 0.9;
+  }
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .masthead-top a { font-size: 0.72rem; color: #555; border-bottom: 1px solid #ccc; text-decoration: none; }
+  .masthead-top a:hover { color: #000; border-color: #000; }
+  .masthead-title {
+    font-family: 'UnifrakturMaguntia', 'Old English Text MT', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  .masthead-sub {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: #666;
+    margin-top: 6px;
+  }
+  .hero { display: none; }
+  .hero h1 { display: none; }
+  .hero h1 span { display: none; }
+  .hero .subtitle { display: none; }
+  .hero .date { display: none; }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Index box */
+  .tldr {
+    margin: 18px 0 0;
+    border: 1px solid #d9d9d9;
+    background: #fafafa;
+  }
+  .tldr-title {
+    padding: 8px 16px 7px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .index-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px 16px 10px;
+    counter-reset: idx;
+  }
+  .index-list li {
+    padding: 4px 0;
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    border-bottom: none;
+    counter-increment: idx;
+  }
+  .index-list li::before {
+    content: counter(idx);
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #888;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+  .index-list li a {
+    color: #1a1a1a;
+    border-bottom: 1px solid #bbb;
+  }
+  .index-list li a:hover {
+    color: #c00;
+    border-color: #c00;
+  }
+
+  /* Navigation */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 3px double #1a1a1a;
+    padding: 9px 0;
+    overflow-x: auto;
+  }
+  .nav-inner {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-wrap: wrap;
+  }
+  .nav a {
+    font-family: 'Noto Serif', Georgia, serif;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 400;
+    padding: 2px 0;
+    white-space: nowrap;
+    transition: color 0.15s;
+    border-bottom: none;
+  }
+  .nav a:hover { color: #666; text-decoration: none; border-bottom: none; }
+  .nav .sep { color: #ccc; margin: 0 10px; font-size: 0.7rem; user-select: none; }
+
+  /* Sections */
+  section { padding: 36px 0; border-bottom: 1px solid #e0e0e0; }
+  section:last-child { border-bottom: none; }
+  section p, .card .detail, .alert, .details-body, .pathway .p-item, .checklist li {
+    font-family: 'Noto Serif', Georgia, serif;
+  }
+  h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 900;
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  h2 .badge {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+  h3 {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    color: #1a1a1a;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: #999; }
+  .card .label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .card .title {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .card .detail {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  .card .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 1px 7px;
+    margin: 4px 4px 0 0;
+    background: #eee;
+    color: #666;
+    border: 1px solid #ddd;
+  }
+  .card .salary {
+    font-weight: 700;
+    color: #2a7a2a;
+  }
+
+  /* Stat boxes */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-box .num {
+    font-size: 1.7rem;
+    font-weight: 700;
+  }
+  .stat-box .desc {
+    font-size: 0.76rem;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.88rem;
+  }
+  th {
+    text-align: left;
+    padding: 8px 10px;
+    background: #f0f0f0;
+    color: #555;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid #ddd;
+  }
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  tr:hover td { background: #f9f9f9; }
+
+  /* Collapsibles */
+  details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  summary:hover { background: #f0f0f0; }
+  summary::marker { content: ''; }
+  summary::before {
+    content: '+';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+    color: #888;
+  }
+  details[open] > summary::before { content: '\2212'; }
+  .details-body { padding: 0 16px 16px; }
+
+  /* Alert boxes */
+  .alert {
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    border: 1px solid var(--border);
+  }
+  .alert-critical {
+    background: #fef6f6;
+    border-color: #e8c0c0;
+  }
+  .alert-critical strong { color: #c00; }
+  .alert-success {
+    background: #f4faf5;
+    border-color: #b5d8b5;
+  }
+  .alert-success strong { color: #2a7a2a; }
+  .alert-info {
+    background: #f6f6fe;
+    border-color: #c0c0e8;
+  }
+  .alert-info strong { color: #444; }
+
+  /* Checklist */
+  .checklist { list-style: none; margin: 10px 0; }
+  .checklist li {
+    padding: 6px 0 6px 26px;
+    position: relative;
+    font-size: 0.88rem;
+    border-bottom: 1px solid #eee;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #bbb;
+    border-radius: 2px;
+  }
+
+  /* Links */
+  a { color: #555; text-decoration: none; border-bottom: 1px solid #bdbdbd; }
+  a:hover { color: #000; border-color: #000; }
+
+  /* Timeline */
+  .timeline { position: relative; margin: 20px 0; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    bottom: 4px;
+    width: 1px;
+    background: #ccc;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c00;
+    border: 2px solid #fff;
+  }
+  .timeline-item .year {
+    font-size: 0.72rem;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .timeline-item .role { font-weight: 700; font-size: 0.92rem; }
+  .timeline-item .org { color: #666; font-size: 0.85rem; }
+
+  /* Pillars / pathway cards */
+  .pathway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .pathway {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-top: 3px solid #1a1a1a;
+  }
+  .pathway.gold { border-top-color: #b8860b; }
+  .pathway.coral { border-top-color: #c00; }
+  .pathway.green { border-top-color: #2a7a2a; }
+  .pathway.purple { border-top-color: #666; }
+  .pathway.orange { border-top-color: #a05a00; }
+  .pathway .p-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .pathway .p-sub {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  .pathway .p-item {
+    font-size: 0.84rem;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .pathway .p-item:last-child { border-bottom: none; }
+
+  /* Meter bars */
+  .meter-row { margin: 7px 0; display: flex; align-items: center; gap: 12px; }
+  .meter-label { font-size: 0.82rem; width: 155px; flex-shrink: 0; }
+  .meter-bar {
+    flex: 1;
+    height: 7px;
+    background: #eee;
+    overflow: hidden;
+  }
+  .meter-fill { height: 100%; }
+  .meter-val { font-size: 0.78rem; color: #888; width: 85px; text-align: right; flex-shrink: 0; }
+
+  /* Profile section */
+  .bio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .bio-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+  .bio-block h4 {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dotted #ccc;
+  }
+  .bio-block ul {
+    list-style: none;
+    font-size: 0.88rem;
+  }
+  .bio-block li { padding: 3px 0; }
+  .bio-block li span { color: #888; }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .bio-grid { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .pathway-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.7rem; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .meter-label { width: 100px; font-size: 0.75rem; }
+  }
+
+  /* Print */
+  @media print {
+    .nav { display: none; }
+    details { break-inside: avoid; }
+    details[open] { break-inside: auto; }
+  }
+</style>
+</head>
+<body class="locked">
+
+<div class="pw-gate" id="pwGate">
+  <img src="cat.png" alt="Cat">
+  <input type="password" id="pwInput" placeholder="Enter password" autofocus>
+  <p class="pw-hint">This page is password protected</p>
+  <p class="pw-error" id="pwError">Wrong password</p>
+</div>
+<script>
+(function() {
+  var input = document.getElementById('pwInput');
+  var error = document.getElementById('pwError');
+  if (sessionStorage.getItem('pw-ok') === '1') unlock();
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (input.value === 'cat') { sessionStorage.setItem('pw-ok', '1'); unlock(); }
+      else { error.classList.add('show'); input.value = ''; }
+    }
+  });
+  function unlock() {
+    document.body.classList.remove('locked');
+    document.getElementById('pwGate').remove();
+  }
+})();
+</script>
+
+<!-- MASTHEAD -->
+<div class="container">
+  <div class="masthead">
+    <img src="cat.png" alt="Cat" class="masthead-cat">
+    <div class="masthead-top">
+      <span>Tuesday, March 17, 2026</span>
+    </div>
+    <h1 class="masthead-title">Owen Guo Career Navigator</h1>
+    <p class="masthead-sub">A comprehensive guide to finding the right next role — built from deep research across 10 dimensions</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#profile">Profile</a><span class="sep">|</span>
+    <a href="#diagnosis">Diagnosis</a><span class="sep">|</span>
+    <a href="#pathways">Pathways</a><span class="sep">|</span>
+    <a href="#market">Job Market</a><span class="sep">|</span>
+    <a href="#salary">Salary</a><span class="sep">|</span>
+    <a href="#hot-leads">Hot Leads</a><span class="sep">|</span>
+    <a href="#backdoor">Backdoor</a><span class="sep">|</span>
+    <a href="#resume">Resume</a><span class="sep">|</span>
+    <a href="#china">China</a><span class="sep">|</span>
+    <a href="#brand">Brand</a><span class="sep">|</span>
+    <a href="#actions">Actions</a>
+  </div>
+</div>
+
+<!-- INDEX -->
+<div class="container">
+  <div class="tldr">
+    <div class="tldr-title">What's Inside</div>
+    <ul class="index-list">
+      <li><a href="#diagnosis">Your resume format is killing your ATS score — here's the fix</a></li>
+      <li><a href="#salary">$100K is conservative — you should target $110K–$140K</a></li>
+      <li><a href="#hot-leads">8 verified active job postings to apply to now</a></li>
+      <li><a href="#backdoor">Backdoor strategies — skip the front door entirely</a></li>
+      <li><a href="#china">The China correspondent dream — realistic assessment</a></li>
+      <li><a href="#brand">How to tell your career story so it sounds like a superpower</a></li>
+      <li><a href="#actions">This week: fix resume, call Susan Rogers, message Bill Bishop</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- PROFILE -->
+<!-- ============================================================ -->
+<section id="profile">
+  <h2>Owen at a Glance</h2>
+
+  <div class="bio-grid">
+    <div class="bio-block">
+      <h4>Career Highlights</h4>
+      <ul>
+        <li><strong>New York Times</strong> — Reporter, Beijing Bureau (2015–2018)</li>
+        <li><strong>Financial Times</strong> — Assistant Journalist, Beijing (2014–2015)</li>
+        <li><strong>Legal Aid Ontario</strong> — Senior Media Relations Advisor (2023–2025)</li>
+        <li><strong>RBC Direct Investing</strong> — Lead Content Strategist (2022–2023)</li>
+        <li><strong>TRIEC</strong> — Content & Media Relations Manager (2021–2022)</li>
+        <li><strong>Sinocism</strong> — Contributing Writer (ongoing, 400K+ subscribers)</li>
+        <li><strong>Massey College</strong> — Southam Journalism Fellow (2025–2026)</li>
+      </ul>
+    </div>
+    <div class="bio-block">
+      <h4>What He Wants</h4>
+      <ul>
+        <li><strong>$100K+ CAD</strong> <span>— minimum salary floor</span></li>
+        <li><strong>Hybrid / Remote</strong> <span>— 2-3 days in office ideal</span></li>
+        <li><strong>Downtown Toronto</strong> <span>— walking distance preferred</span></li>
+        <li><strong>Meaningful work</strong> <span>— comms team valued by leadership</span></li>
+        <li><strong>Keep Sinocism</strong> <span>— morning side gig must continue</span></li>
+        <li><strong>Dream:</strong> <span>Globe & Mail China correspondent</span></li>
+        <li><strong>Long-term:</strong> <span>Director / VP of Communications</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bio-grid">
+    <div class="bio-block">
+      <h4>Superpowers</h4>
+      <ul>
+        <li>Elite writing — 4 NYT front-page stories, FT investigations</li>
+        <li>Bilingual English-Chinese (native)</li>
+        <li>Daily China intelligence workflow via Sinocism</li>
+        <li>Knows how newsrooms think — invaluable for media relations</li>
+        <li>Can pick up any topic and make it clear for any audience</li>
+        <li>Published in NYT, FT, Globe, Star, BBC, WaPo, NPR, Al Jazeera, CTV</li>
+      </ul>
+    </div>
+    <div class="bio-block">
+      <h4>Education</h4>
+      <ul>
+        <li><strong>Journalism Fellow</strong> — Massey College, U of T (2025–26)</li>
+        <li><strong>M.A. Global Affairs</strong> — Munk School, U of T (2018–20)</li>
+        <li><strong>M.A. Intercultural Communication</strong> — Shanghai (2009–12)</li>
+      </ul>
+      <h4 style="margin-top: 16px;">Select Bylines</h4>
+      <ul>
+        <li><a href="https://www.nytimes.com/2018/02/02/business/china-consumers-deodorant.html" target="_blank">Aiming at China's Armpits — NYT</a></li>
+        <li><a href="https://www.theglobeandmail.com/business/commentary/article-how-deepseek-an-unlikely-chinese-app-disrupted-western-ai-and-sank-the/" target="_blank">How DeepSeek Disrupted Western AI — Globe</a></li>
+        <li><a href="https://www.bbc.com/worklife/article/20240202-the-chinese-millennials-shunning-lunar-new-year-travel" target="_blank">Chinese Millennials Shunning Lunar New Year — BBC</a></li>
+        <li><a href="https://thehub.ca/2025/04/28/owen-guo-im-a-38-year-old-chinese-immigrant-and-first-time-voter-ill-never-take-that-privilege-for-granted/" target="_blank">Why I'm Voting for the First Time — The Hub</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Career Timeline -->
+  <h3>Career Arc</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="year">2011–2013</div>
+      <div class="role">McClatchy → NOS News</div>
+      <div class="org">Beijing — field reporting, news production, Chinese-English translation</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2014–2015</div>
+      <div class="role">Financial Times — Assistant Journalist</div>
+      <div class="org">Beijing — energy sector, Hanergy investigation (SOPA finalist)</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2015–2018</div>
+      <div class="role">The New York Times — Reporter & Researcher</div>
+      <div class="org">Beijing — business desk, 4 front-page stories, Anbang investigation</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2018–2020</div>
+      <div class="role">M.A. Global Affairs — Munk School, U of T</div>
+      <div class="org">Toronto — pivoted to Canada, freelance writing begins</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2021–2022</div>
+      <div class="role">TRIEC — Content & Media Relations Manager</div>
+      <div class="org">Toronto — media outreach, immigrant employment stories, writing workshops</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2022–2023</div>
+      <div class="role">RBC Direct Investing — Lead Content Strategist</div>
+      <div class="org">Toronto — editorial strategy, content auditing, SEO</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2023–2025</div>
+      <div class="role">Legal Aid Ontario — Senior Media Relations Advisor</div>
+      <div class="org">Toronto — media relations, executive messaging, issues management</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2025–2026</div>
+      <div class="role">Massey College — Southam Journalism Fellow</div>
+      <div class="org">Toronto — fellowship ending ~April 2026, freelancing for Globe, Star, CTV, BBC</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DIAGNOSIS -->
+<!-- ============================================================ -->
+<section id="diagnosis">
+  <h2>Why Owen Isn't Getting Interviews <span class="badge" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">Critical Fix</span></h2>
+
+  <div class="alert alert-critical">
+    <strong>Root Cause Found:</strong> Owen's resume is split into "Communications Experience" and "Reporting Experience" — two non-chronological sections bucketed by category. Modern ATS systems (Workday, Greenhouse, Lever, iCIMS) are trained to parse <strong>reverse-chronological timelines</strong>. When experience is bucketed by category, the parser cannot correctly associate dates with roles, resulting in a garbled candidate profile. His NYT and FT roles may be <strong>completely invisible</strong> to ATS.
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Current Approach</th><th>What's Happening</th><th>Recommended Fix</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Two separate sections by category</td>
+        <td>ATS can't parse non-standard headings</td>
+        <td>One "Professional Experience" section</td>
+      </tr>
+      <tr>
+        <td>Non-chronological order</td>
+        <td>Dates get garbled in ATS database</td>
+        <td>Strict reverse-chronological order</td>
+      </tr>
+      <tr>
+        <td>Journalism described in journalism language</td>
+        <td>Keywords don't match comms job postings</td>
+        <td>All roles use comms-relevant language</td>
+      </tr>
+      <tr>
+        <td>No professional summary</td>
+        <td>No narrative bridge for human readers</td>
+        <td>3–4 line summary connecting journalism + comms</td>
+      </tr>
+      <tr>
+        <td>Unknown keyword optimization</td>
+        <td>Missing critical ATS match terms</td>
+        <td>15–25 comms-specific keywords per application</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-success">
+    <strong>The good news:</strong> Owen's background is genuinely excellent for senior comms roles. The NYT/FT names are career accelerants. The problem is purely structural — once ATS can actually read his resume, his interview rate should increase materially.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5 PATHWAYS -->
+<!-- ============================================================ -->
+<section id="pathways">
+  <h2>Five Career Pathways</h2>
+  <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">Owen doesn't have to pick one — but understanding the distinct routes helps focus energy and applications.</p>
+
+  <div class="pathway-grid">
+    <div class="pathway">
+      <div class="p-title">1. Senior Comms in Toronto</div>
+      <div class="p-sub">The practical path — $105K–$170K CAD, hybrid, downtown</div>
+      <div class="p-item"><strong>Target titles:</strong> Senior Communications Manager, Director of Communications</div>
+      <div class="p-item"><strong>Top sectors:</strong> Financial services (banks), tech, universities, government</div>
+      <div class="p-item"><strong>Realistic timeline:</strong> 1–3 months with fixed resume + networking</div>
+      <div class="p-item"><strong>Difficulty:</strong> Moderate — strong market, Owen is competitive</div>
+    </div>
+    <div class="pathway gold">
+      <div class="p-title">2. Content / Editorial Leadership</div>
+      <div class="p-sub">The journalism-adjacent path — $95K–$205K CAD</div>
+      <div class="p-item"><strong>Target titles:</strong> Head of Content, Content Strategy Director, Managing Editor</div>
+      <div class="p-item"><strong>Top employers:</strong> Wealthsimple, Shopify, banks, insurance, MaRS</div>
+      <div class="p-item"><strong>Key insight:</strong> "Content Strategy Director" pays more than "Editorial Director" for same work</div>
+      <div class="p-item"><strong>Difficulty:</strong> Moderate — 66% of editors have left media for these roles</div>
+    </div>
+    <div class="pathway coral">
+      <div class="p-title">3. China Expertise Specialist</div>
+      <div class="p-sub">The niche path — think tanks, political risk, intelligence</div>
+      <div class="p-item"><strong>Target orgs:</strong> Trivium China, Rhodium Group, Eurasia Group, Brookings, APF Canada</div>
+      <div class="p-item"><strong>Key insight:</strong> Critical shortage of China experts in North America</div>
+      <div class="p-item"><strong>Consideration:</strong> Many are DC/US-based — may require relocation</div>
+      <div class="p-item"><strong>Difficulty:</strong> Low-moderate — Owen's profile is rare and in demand</div>
+    </div>
+    <div class="pathway green">
+      <div class="p-title">4. Globe & Mail China Correspondent</div>
+      <div class="p-sub">The dream — but requires strategic patience</div>
+      <div class="p-item"><strong>Reality:</strong> No major Canadian outlet currently has a China bureau (CBC closed theirs 2022)</div>
+      <div class="p-item"><strong>Biggest obstacle:</strong> China's visa regime, not hiring</div>
+      <div class="p-item"><strong>Strategy:</strong> Deepen Globe freelance relationship → become their go-to China voice</div>
+      <div class="p-item"><strong>Difficulty:</strong> High — structural barriers, but Owen is the obvious candidate</div>
+    </div>
+    <div class="pathway purple">
+      <div class="p-title">5. US Big Tech Comms (Remote)</div>
+      <div class="p-sub">The high-ceiling path — $200K–$1M+ USD</div>
+      <div class="p-item"><strong>The trend:</strong> AI companies paying premium for human storytellers who explain complex topics</div>
+      <div class="p-item"><strong>Target firms:</strong> Anthropic, OpenAI, Google, Hinge, Ramp, Adobe</div>
+      <div class="p-item"><strong>Key insight:</strong> "Companies spending billions to generate infinite text are paying a premium for human writers"</div>
+      <div class="p-item"><strong>Difficulty:</strong> Competitive — but Owen's profile is differentiated</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- MARKET -->
+<!-- ============================================================ -->
+<section id="market">
+  <h2>Toronto Job Market Snapshot</h2>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num" style="color: #c00;">3,000+</div>
+      <div class="desc">Comms jobs on LinkedIn in Toronto</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color: #1a1a1a;">175</div>
+      <div class="desc">Director of Communications roles</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color: #2a7a2a;">687</div>
+      <div class="desc">Communications Manager roles</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color: #1a1a1a;">70–80%</div>
+      <div class="desc">Jobs never publicly posted</div>
+    </div>
+  </div>
+
+  <h3>Best Industries for Owen</h3>
+  <table>
+    <thead>
+      <tr><th>Industry</th><th>Salary Range</th><th>Owen's Fit</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Financial Services</strong></td>
+        <td style="color: #2a7a2a;">$110K–$190K+</td>
+        <td>Excellent — has RBC experience</td>
+        <td>Big Five banks are largest hirers in Toronto</td>
+      </tr>
+      <tr>
+        <td><strong>Technology</strong></td>
+        <td style="color: #2a7a2a;">$100K–$275K</td>
+        <td>Strong — editorial skills valued</td>
+        <td>Google, Shopify, Wealthsimple + US remote</td>
+      </tr>
+      <tr>
+        <td><strong>Higher Education</strong></td>
+        <td style="color: #8a6d00;">$90K–$150K</td>
+        <td>Excellent — Massey connection</td>
+        <td>U of T has active openings now</td>
+      </tr>
+      <tr>
+        <td><strong>Government / Public Sector</strong></td>
+        <td style="color: #8a6d00;">$85K–$140K</td>
+        <td>Strong — LAO experience</td>
+        <td>City of Toronto, Ontario, federal — strong benefits</td>
+      </tr>
+      <tr>
+        <td><strong>Think Tanks / Policy</strong></td>
+        <td style="color: #8a6d00;">$80K–$140K</td>
+        <td>Perfect niche — China expertise</td>
+        <td>Asia Pacific Foundation, C.D. Howe, MLI</td>
+      </tr>
+      <tr>
+        <td><strong>Nonprofit / NGO</strong></td>
+        <td style="color: #c00;">$52K–$100K</td>
+        <td>Mixed — may be below salary floor</td>
+        <td>Only Director+ roles reliably cross $100K</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- SALARY -->
+<!-- ============================================================ -->
+<section id="salary">
+  <h2>Salary Reality Check</h2>
+
+  <div class="alert alert-success">
+    <strong>$100K CAD is conservative.</strong> The median Senior Communications Manager in Toronto with 8+ years experience earns $163K. Owen should target <strong>$110K–$140K base</strong> for Senior Manager roles, or <strong>$130K–$170K</strong> for Director-level. $100K should be treated as a floor, not a target.
+  </div>
+
+  <h3>Role-by-Role Salary Map (Toronto, CAD)</h3>
+  <div style="margin: 20px 0;">
+    <div class="meter-row">
+      <div class="meter-label">VP Communications</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 92%; background: #1a1a1a;"></div></div>
+      <div class="meter-val">$180K–$250K+</div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-label">Director of Comms</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 78%; background: #333;"></div></div>
+      <div class="meter-val">$130K–$192K</div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-label">Sr. Comms Manager</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 62%; background: #555;"></div></div>
+      <div class="meter-val">$100K–$163K</div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-label">Content Strategy Dir.</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 68%; background: #777;"></div></div>
+      <div class="meter-val">$84K–$205K</div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-label">Editor-in-Chief (Corp)</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 56%; background: #999;"></div></div>
+      <div class="meter-val">$95K–$170K</div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-label">Managing Editor</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 44%; background: #aaa;"></div></div>
+      <div class="meter-val">$90K–$120K</div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-label">Editorial Director</div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 36%; background: #bbb;"></div></div>
+      <div class="meter-val">$62K–$90K</div>
+    </div>
+  </div>
+  <p style="font-size: 0.8rem; color: #666;">Note: "Communications" titles consistently pay more than "Editorial" titles at equivalent seniority. Target roles with "Communications" or "Content Strategy" in the title.</p>
+
+  <h3>Sector Comparison</h3>
+  <table>
+    <thead><tr><th>Sector</th><th>Senior Comms Salary</th><th>Bonus</th><th>Benefits Edge</th></tr></thead>
+    <tbody>
+      <tr><td>Private (Banking)</td><td style="color: #2a7a2a;">$110K–$190K+</td><td>10–20%</td><td>RRSP match, RSUs possible</td></tr>
+      <tr><td>Tech</td><td style="color: #2a7a2a;">$100K–$275K</td><td>Variable</td><td>RSUs can add 20–40%</td></tr>
+      <tr><td>Ontario Government</td><td style="color: #8a6d00;">$71K–$110K</td><td>Rare</td><td>Defined benefit pension (worth ~15–20% of salary)</td></tr>
+      <tr><td>Federal Government</td><td style="color: #8a6d00;">$70K–$110K</td><td>Rare</td><td>Strong pension + benefits</td></tr>
+      <tr><td>Nonprofit</td><td style="color: #c00;">$52K–$100K</td><td>Rare</td><td>Variable</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- HOT LEADS -->
+<!-- ============================================================ -->
+<section id="hot-leads">
+  <h2>Hot Leads — Apply Now <span class="badge" style="background: #f0f8f0; color: #2a7a2a; border: 1px solid #b5d8b5;">Active Openings</span></h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="label">University</div>
+      <div class="title">Senior Communications Officer (Term)</div>
+      <div class="detail">
+        <strong>University of Toronto</strong> — Sustainability Office<br>
+        <span class="salary">$97K–$124K</span><br>
+        Multi-channel comms strategy. Owen's RBC content strategy + NYT/FT editorial are a direct match. Already at Massey College. Deadline: Mar 29, 2026.<br>
+        <a href="https://jobs.utoronto.ca/job/Toronto-Senior-Communications-Officer-(term)-ON/600638217/" target="_blank">View posting →</a>
+      </div>
+      <span class="tag">content strategy</span><span class="tag">hybrid</span><span class="tag">downtown</span>
+    </div>
+    <div class="card">
+      <div class="label">Government</div>
+      <div class="title">Senior Communications Advisor, Media Relations</div>
+      <div class="detail">
+        <strong>City of Toronto</strong> — Media Relations & Issues Management<br>
+        <span class="salary">$102K–$136K</span><br>
+        Issues management + media relations. Owen's journalist-to-comms arc is exactly what they want. Hybrid eligible.<br>
+        <a href="https://jobs.toronto.ca/jobsatcity/job/Toronto-SENIOR-COMM-ADVISOR-STRATEGIC-COMM-ON-M4Y-0E6/589868617/" target="_blank">View posting →</a>
+      </div>
+      <span class="tag">government</span><span class="tag">pension</span><span class="tag">downtown</span>
+    </div>
+    <div class="card">
+      <div class="label">Think Tank — US</div>
+      <div class="title">Engagement Manager, China Practice</div>
+      <div class="detail">
+        <strong>Rhodium Group</strong> — Washington, DC<br>
+        <span class="salary">$125K–$165K USD + incentives</span><br>
+        Client engagement for Rhodium's China practice. Owen's China knowledge and media network map directly.<br>
+        <a href="https://rhg.com/about/careers/" target="_blank">View careers →</a>
+      </div>
+      <span class="tag">China expertise</span><span class="tag">policy</span><span class="tag">relocation</span>
+    </div>
+    <div class="card">
+      <div class="label">Political Risk — US</div>
+      <div class="title">Associate, Geotechnology</div>
+      <div class="detail">
+        <strong>Eurasia Group</strong> — Washington, DC / New York<br>
+        Research reports, newsletters, and client deliverables on tech policy. Mandarin proficiency preferred. Owen's analytical journalism + China expertise are a strong match.<br>
+        <a href="https://www.eurasiagroup.net/careers/associate_geotech_lnnydc" target="_blank">View posting →</a>
+      </div>
+      <span class="tag">China expertise</span><span class="tag">tech policy</span><span class="tag">relocation</span>
+    </div>
+    <div class="card">
+      <div class="label">Think Tank — US</div>
+      <div class="title">Research Associate, Center for China Analysis</div>
+      <div class="detail">
+        <strong>Asia Society Policy Institute</strong> — New York<br>
+        Full-time role in ASPI's fast-growing China team. Requires advanced Chinese language skills. Owen's NYT/FT China reporting is ideal.<br>
+        <a href="https://asiasociety.org/new-york/research-associate-center-china-analysis" target="_blank">View posting →</a>
+      </div>
+      <span class="tag">China expertise</span><span class="tag">prestige</span><span class="tag">relocation</span>
+    </div>
+    <div class="card">
+      <div class="label">Intelligence</div>
+      <div class="title">Foreign Language Intelligence Analyst</div>
+      <div class="detail">
+        <strong>CSE (Communications Security Establishment)</strong> — Ottawa<br>
+        Requires advanced Mandarin reading + listening. Owen is a natural fit.<br>
+        <a href="https://www.cse-cst.gc.ca/en/careers" target="_blank">View careers →</a>
+      </div>
+      <span class="tag">Mandarin</span><span class="tag">government</span><span class="tag">security clearance</span>
+    </div>
+    <div class="card">
+      <div class="label">Arts & Culture</div>
+      <div class="title">Senior Communications Manager, Market</div>
+      <div class="detail">
+        <strong>TIFF (Toronto International Film Festival)</strong><br>
+        <span class="salary">~$90K–$120K</span><br>
+        Executive-level comms, crisis communications, global media fluency. Owen's international journalism background is a differentiator. Deadline: Mar 31, 2026.<br>
+        <a href="https://www.entertainmentcareers.net/toronto-international-film-festival/senior-communications-manager-market/job/514687/" target="_blank">View posting →</a>
+      </div>
+      <span class="tag">content</span><span class="tag">culture</span><span class="tag">Toronto</span>
+    </div>
+    <div class="card">
+      <div class="label">Corporate — Stretch</div>
+      <div class="title">Director, Communications & Public Affairs, Canada</div>
+      <div class="detail">
+        <strong>Johnson & Johnson</strong> — Toronto<br>
+        <span class="salary">~$140K–$180K+</span><br>
+        Leads integrated comms for J&J Canada. Media spokesperson role. High ceiling stretch opportunity.<br>
+        <a href="https://www.careers.jnj.com/en/jobs/r-047063/director-communications-public-affairs-canada/" target="_blank">View posting →</a>
+      </div>
+      <span class="tag">corporate</span><span class="tag">stretch</span><span class="tag">Toronto</span>
+    </div>
+  </div>
+
+  <h3>Companies to Monitor Closely</h3>
+  <table>
+    <thead><tr><th>Company</th><th>Why</th><th>Careers Link</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Wealthsimple</strong></td><td>Best brand editorial in Canada (Wealthsimple Magazine). Owen has freelanced for their TLDR newsletter.</td><td><a href="https://www.wealthsimple.com/en-ca/about/work-with-us/" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>RBC</strong></td><td>Owen was Lead Content Strategist here. Boomerang hire is natural.</td><td><a href="https://jobs.rbc.com/ca/en" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>Shopify</strong></td><td>Values strong writers. Remote-friendly. Large content org.</td><td><a href="https://www.shopify.com/careers" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>Globe and Mail</strong></td><td>Owen's freelance relationship. Best path to the China correspondent dream.</td><td><a href="https://jobs.dayforcehcm.com/en-US/theglobeandmail/CANDIDATEPORTAL" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>Asia Pacific Foundation</strong></td><td>Canada's leading Asia think tank. Perfect intersection — check back regularly (no current postings).</td><td><a href="https://www.asiapacific.ca/about-us/employment-opportunities" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>Trivium China</strong></td><td>Explicitly values clear English writing about China + policy knowledge. DC office.</td><td><a href="https://triviumchina.com/careers/" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>MaRS Discovery District</strong></td><td>Owen already freelances there. Deepen the relationship.</td><td><a href="https://www.marsdd.com/careers/" target="_blank">Careers →</a></td></tr>
+      <tr><td><strong>Eurasia Group</strong></td><td>World's leading political risk firm. Active Associate, Geotechnology posting (Mandarin preferred).</td><td><a href="https://www.eurasiagroup.net/careers/associate_geotech_lnnydc" target="_blank">Apply →</a></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKDOOR -->
+<!-- ============================================================ -->
+<section id="backdoor">
+  <h2>Backdoor Strategies <span class="badge" style="background: #f0f0f0; color: #555; border: 1px solid #ccc;">Skip the Front Door</span></h2>
+
+  <div class="alert alert-info">
+    <strong>70–80% of jobs in Canada are never publicly posted.</strong> Owen's network is extraordinarily strong — NYT/FT alumni, Sinocism's 400K-subscriber audience, Massey College, Munk School, RBC connections. He is within two degrees of separation from every major comms hiring manager in Canada. The challenge is not building a network — it's systematically activating the one he already has.
+  </div>
+
+  <!-- Backdoor 1: Sinocism -->
+  <details>
+    <summary>Weaponize the Sinocism Connection</summary>
+    <div class="details-body">
+      <p>Sinocism is the <strong>#5 news publication on all of Substack</strong> with 400K+ subscribers — policymakers, diplomats, investors, C-suite executives. As Evan Osnos said, it's "the presidential daily brief for China hands."</p>
+      <ul class="checklist">
+        <li>Have a direct conversation with <strong>Bill Bishop</strong> about career goals. Ask for 2–3 introductions to subscribers in corporate leadership.</li>
+        <li>Ask Bishop if he'd mention Owen's availability or provide a visible contributor credit.</li>
+        <li>Write a guest analysis piece that demonstrates comms strategic thinking — e.g., "How Western companies should communicate about their China operations."</li>
+        <li>Frame Sinocism in all bios: "Daily contributor to Sinocism, the leading China newsletter read by 400K+ policymakers, investors, and journalists."</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Backdoor 2: NYT Alumni -->
+  <details>
+    <summary>Activate the NYT & FT Alumni Network</summary>
+    <div class="details-body">
+      <p>Many former NYT journalists now hold VP-level comms roles at tech companies, financial institutions, and consulting firms. They've walked Owen's exact path.</p>
+      <ul class="checklist">
+        <li>Search LinkedIn for "New York Times" + "Beijing" to find every colleague from the 2015–2018 era.</li>
+        <li>Target NYT alumni who moved into corporate comms — search for profiles with both "New York Times" and "communications."</li>
+        <li>Ask 3–5 former colleagues for 20-minute informational coffees: "I'm exploring how to bring my China expertise into a corporate setting — who in your network should I be talking to?"</li>
+        <li>Do the same for FT Beijing bureau contacts.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Backdoor 3: Recruiters -->
+  <details>
+    <summary>Contact Specialized Recruiters</summary>
+    <div class="details-body">
+      <table>
+        <thead><tr><th>Firm</th><th>Specialty</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong><a href="https://www.srerc.com/contact" target="_blank">Susan Rogers (SRERC)</a></strong></td>
+            <td>Comms & Public Affairs only</td>
+            <td>The only recruiter in Canada who specializes exclusively in Communications. 20+ years, hundreds of placements. <strong>Call this week.</strong></td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://davidsmiththeheadhunter.com/" target="_blank">David Smith The Headhunter</a></strong></td>
+            <td>Creative & PR industry</td>
+            <td>Top Toronto exec search for agency/media leadership.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://www.creativeniche.com/" target="_blank">Creative Niche</a></strong></td>
+            <td>Marketing, comms, design</td>
+            <td>14,000+ placements. Good for both contract and permanent.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://www.iqpartners.com/" target="_blank">IQ Partners</a></strong></td>
+            <td>Marketing recruitment</td>
+            <td>Deep Toronto network, direct-contact model.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://www.roberthalf.com/ca/en" target="_blank">Robert Half / Creative Group</a></strong></td>
+            <td>Contract-to-perm pipeline</td>
+            <td>Great for getting working fast. Many contracts convert. Toronto office: 181 Bay St.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- Backdoor 4: Massey + Munk -->
+  <details>
+    <summary>Mine Massey College & Munk School Networks</summary>
+    <div class="details-body">
+      <p>Owen sits at the intersection of two elite U of T networks with 60+ years of alumni.</p>
+      <ul class="checklist">
+        <li><strong>Massey College</strong> Southam Fellowship has produced 300+ alumni — many now in senior editorial, policy, and comms roles. Attend every Massey event.</li>
+        <li>Connect with fellow 2025–26 fellows, especially those with media connections.</li>
+        <li>Contact the <strong>Munk School alumni office</strong> — request alumni directory and mentorship programs. Munk alumni are disproportionately in government, policy, international business.</li>
+        <li>Join <strong>IABC/Toronto</strong> (1,200+ members). The <a href="https://wc.iabc.com/" target="_blank">IABC World Conference 2026 is in Toronto, June 14–16</a> — must attend.</li>
+        <li>Join <strong>CPRS Toronto</strong>. Attend "PR Sparks" and networking events.</li>
+        <li>Volunteer to speak: "What Journalists Wish Comms Pros Knew" — positions Owen as expert, not job seeker.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Backdoor 5: Freelance to Full-Time -->
+  <details>
+    <summary>Freelance-to-Full-Time Pipeline</summary>
+    <div class="details-body">
+      <p>In Canadian media, the hiring manager almost always already knows the person they want. The job posting is often a formality. Owen's strategy should be to ensure he is that known person.</p>
+      <ul class="checklist">
+        <li>Frame every freelance relationship as an audition. Ask editors: "What would a staff role on this beat look like?"</li>
+        <li>Deepen the <strong>Globe and Mail</strong> relationship — pitch increasingly ambitious China stories to the foreign desk.</li>
+        <li>Deepen the <strong>MaRS</strong> relationship — pitch a regular content series, explore formalizing the role.</li>
+        <li>The insurance company that said "Hey, let's do some freelance writing" — take them up on it. Freelance contracts convert.</li>
+        <li>Consider launching a <strong>China-Canada Briefing newsletter</strong> — no one owns this niche. Cross-promote with Sinocism.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Backdoor 6: Warm Intro Framework -->
+  <details>
+    <summary>The Warm Introduction Framework</summary>
+    <div class="details-body">
+      <p>Owen should never cold-apply to anything. Here's the system:</p>
+      <ol style="font-size: 0.9rem; padding-left: 20px; line-height: 1.7;">
+        <li><strong>Map the target:</strong> Identify the company and the hiring manager (usually VP/SVP Comms).</li>
+        <li><strong>Find the bridge:</strong> Search Owen's network for anyone connected to that person.</li>
+        <li><strong>Activate the bridge:</strong> "I noticed you're connected to [Name] at [Company]. Would you be comfortable making a brief introduction?"</li>
+        <li><strong>The informational meeting:</strong> Never ask for a job. Ask: "What does your team look for in a comms hire?"</li>
+        <li><strong>Follow up:</strong> Thank-you note within 24 hours. Share a relevant insight within a week.</li>
+      </ol>
+      <p style="margin-top: 12px; font-size: 0.85rem; color: #666;"><strong>Priority warm-intro targets:</strong> RBC (internal connections!), TD, Scotiabank, BMO, CPPIB, OTPP, Barrick Gold, McKinsey Toronto, BCG Toronto, Thomson Reuters, Global Affairs Canada, Asia Pacific Foundation.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============================================================ -->
+<!-- RESUME FIX -->
+<!-- ============================================================ -->
+<section id="resume">
+  <h2>Resume Rebuild Guide</h2>
+
+  <h3>New Structure</h3>
+  <div style="background: #fafafa; border: 1px solid #d9d9d9; padding: 20px; font-family: 'Courier New', monospace; font-size: 0.85rem; line-height: 1.8;">
+    <div style="color: #c00; font-weight: bold;">PROFESSIONAL SUMMARY</div>
+    <div style="color: #666; margin-bottom: 12px;">Senior communications professional with 10+ years in strategic media relations, content strategy, and stakeholder engagement. Former international correspondent (NYT, FT) bringing deep media fluency and exceptional writing to corporate communications. Bilingual English-Chinese.</div>
+    <div style="color: #c00; font-weight: bold;">PROFESSIONAL EXPERIENCE</div>
+    <div style="color: #888; font-size: 0.78rem; margin-bottom: 4px;">▸ Single section. Strict reverse-chronological. All roles.</div>
+    <div>Senior Media Relations Advisor — Legal Aid Ontario (2023–2025)</div>
+    <div>Lead Content Strategist — RBC Direct Investing (2022–2023)</div>
+    <div>Content & Media Relations Manager — TRIEC (2021–2022)</div>
+    <div>Freelance Reporter — Globe, Star, CTV, BBC, Sinocism (2018–present)</div>
+    <div>Reporter & Researcher — The New York Times, Beijing (2015–2018)</div>
+    <div>Assistant Journalist — Financial Times, Beijing (2014–2015)</div>
+    <div style="color: #888; font-size: 0.78rem;">(...earlier roles optional)</div>
+    <div style="color: #c00; font-weight: bold; margin-top: 12px;">SKILLS</div>
+    <div style="color: #888; font-size: 0.78rem;">Keyword-rich section matching target job postings</div>
+    <div style="color: #c00; font-weight: bold; margin-top: 12px;">EDUCATION</div>
+    <div style="color: #c00; font-weight: bold; margin-top: 12px;">SELECT PUBLICATIONS</div>
+    <div style="color: #888; font-size: 0.78rem;">2–3 lines. NYT, FT, Globe bylines. Signals credibility.</div>
+  </div>
+
+  <h3>Reframe Journalism Bullet Points in Comms Language</h3>
+  <table>
+    <thead><tr><th style="width: 50%;">Don't Write</th><th>Write Instead</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>"Covered China's economy for the NYT"</td>
+        <td>"Developed editorial strategy on China's economic transformation for global audiences of 10M+ readers"</td>
+      </tr>
+      <tr>
+        <td>"Reported on Xi Jinping's consolidation of power"</td>
+        <td>"Produced deadline-driven analysis on geopolitical risk for senior decision-makers in government, finance, and media"</td>
+      </tr>
+      <tr>
+        <td>"Filed stories for the Financial Times"</td>
+        <td>"Created audience-targeted content across digital and print platforms; managed source relationships across government, business, and civil society"</td>
+      </tr>
+      <tr>
+        <td>"Was part of Anbang investigation team"</td>
+        <td>"Led months-long investigative research on complex financial structures, delivering high-impact content that informed regulatory and market responses"</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Must-Have ATS Keywords</h3>
+  <div style="margin: 12px 0;">
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">media relations</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">strategic communications</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">stakeholder engagement</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">content strategy</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">crisis communications</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">executive communications</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">issues management</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">brand reputation</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">earned media</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">thought leadership</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">media training</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">digital communications</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">cross-functional collaboration</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">campaign development</span>
+    <span class="tag" style="background: #fef0f0; color: #c00; border: 1px solid #e8c0c0;">government relations</span>
+  </div>
+  <p style="font-size: 0.82rem; color: #666; margin-top: 8px;"><strong>Format rules:</strong> Single-column, no tables/graphics. Submit as .docx. Standard section headings. Arial/Calibri 10–11pt. No info in headers/footers. Use <a href="https://www.jobscan.co/" target="_blank">Jobscan</a> to check ATS match scores — aim for 75%+.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHINA TRACK -->
+<!-- ============================================================ -->
+<section id="china">
+  <h2>The China Track</h2>
+
+  <div class="alert alert-info">
+    <strong>Critical context:</strong> The US faces a documented shortage of China experts. The State Department has been cutting China specialists even as countering Beijing is a top priority. Demand is surging in private sector and think tanks. Owen's profile — native Chinese, 7 years Beijing journalism, active Sinocism contributor — sits squarely in a talent gap that is widening.
+  </div>
+
+  <h3>Globe and Mail China Correspondent — The Realistic Path</h3>
+  <div class="card" style="margin: 16px 0;">
+    <div class="detail" style="font-size: 0.9rem; line-height: 1.7;">
+      <p><strong>Current state:</strong> No major Canadian outlet maintains a China bureau. CBC closed theirs in 2022 due to visa delays. The Globe's current Asia correspondent is James Griffiths, based in Hong Kong.</p>
+      <p style="margin-top: 8px;"><strong>Biggest obstacle:</strong> China's visa regime — not hiring. China expelled 18 journalists from NYT/WSJ/WaPo in 2020. Visa renewals routinely delayed or denied for Canadian journalists.</p>
+      <p style="margin-top: 8px;"><strong>Owen's advantage:</strong> Prior Beijing experience (may help with visa). Already freelancing for the Globe (DeepSeek piece). One of very few bilingual English-Chinese journalists in Canada with elite bylines.</p>
+      <p style="margin-top: 8px;"><strong>Strategy:</strong></p>
+      <ol style="padding-left: 20px; font-size: 0.88rem; line-height: 1.6;">
+        <li>Keep pitching increasingly ambitious China stories to the Globe's foreign desk</li>
+        <li>Build relationships with the Foreign News Editor and Editor-in-Chief</li>
+        <li>Apply for <a href="https://pulitzercenter.org/grants" target="_blank">Pulitzer Center grants</a> to fund self-directed China reporting</li>
+        <li>Never directly ask about the correspondent job — become the obvious internal candidate</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3>China Expertise Organizations</h3>
+  <table>
+    <thead><tr><th>Organization</th><th>Type</th><th>Location</th><th>Why It Fits</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://triviumchina.com/careers/" target="_blank"><strong>Trivium China</strong></a></td><td>Policy intelligence</td><td>DC / Beijing</td><td>Explicitly values clear English writing about China</td></tr>
+      <tr><td><a href="https://rhg.com/about/careers/" target="_blank"><strong>Rhodium Group</strong></a></td><td>Economic intelligence</td><td>Washington, DC</td><td>Engagement Manager, China Practice — $125K–$165K USD + incentives</td></tr>
+      <tr><td><a href="https://www.eurasiagroup.net/careers" target="_blank"><strong>Eurasia Group</strong></a></td><td>Political risk</td><td>NY / DC</td><td>Values on-the-ground China experience</td></tr>
+      <tr><td><a href="https://www.asiapacific.ca/about-us/employment-opportunities" target="_blank"><strong>Asia Pacific Foundation</strong></a></td><td>Think tank</td><td>Vancouver</td><td>Canada's leading Asia think tank. No current postings — check back regularly.</td></tr>
+      <tr><td><a href="https://www.brookings.edu/careers/job-openings/" target="_blank"><strong>Brookings</strong></a></td><td>Think tank</td><td>DC</td><td>Active Fellow/Senior Fellow opening, China Center</td></tr>
+      <tr><td><a href="https://chinaus-icas.org/about-icas/careers-internships/" target="_blank"><strong>Inst. for China-America Studies</strong></a></td><td>Think tank</td><td>DC</td><td>Comms + China intersection role</td></tr>
+      <tr><td><a href="https://careers.csis.org/opportunities" target="_blank"><strong>CSIS</strong></a></td><td>Think tank</td><td>DC</td><td>Major China program, hiring across research + comms</td></tr>
+      <tr><td><strong>Global Affairs Canada</strong></td><td>Government</td><td>Ottawa</td><td>China desk needs Mandarin + analysis skills</td></tr>
+      <tr><td><strong>CSE</strong></td><td>Intelligence</td><td>Ottawa</td><td>Foreign Language Intelligence Analyst — advanced Mandarin required</td></tr>
+      <tr><td><a href="https://www.controlrisks.com/careers" target="_blank"><strong>Control Risks</strong></a></td><td>Consulting</td><td>Global</td><td>Favors candidates who lived/worked in their region + multiple languages</td></tr>
+      <tr><td><a href="https://asiasociety.org/new-york/research-associate-center-china-analysis" target="_blank"><strong>Asia Society Policy Institute</strong></a></td><td>Think tank</td><td>New York</td><td>Research Associate, Center for China Analysis — active posting, requires advanced Chinese</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Journalism Fellowships & Grants</h3>
+  <table>
+    <thead><tr><th>Opportunity</th><th>Details</th><th>Fit</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://pulitzercenter.org/grants" target="_blank"><strong>Pulitzer Center Grants</strong></a></td><td>Rolling deadline, $5K–$10K for international reporting</td><td>Excellent — pitch China stories</td></tr>
+      <tr><td><strong>Jefferson Fellowships (East-West Center)</strong></td><td>Oct–Nov 2026, theme: "AI in Asia-Pacific"</td><td>Strong — DeepSeek angle</td></tr>
+      <tr><td><strong>AAJA Scholarships & Fellowships</strong></td><td>Multiple opportunities, applications open</td><td>Strong — Owen's background</td></tr>
+      <tr><td><strong>Reuters Institute Fellowship (Oxford)</strong></td><td>Prestigious mid-career journalism fellowship</td><td>Worth applying</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- PERSONAL BRAND -->
+<!-- ============================================================ -->
+<section id="brand">
+  <h2>Personal Brand & Positioning</h2>
+
+  <div class="alert alert-success">
+    <strong>The one-sentence positioning:</strong> "Owen Guo is a communications strategist with the rare combination of foreign correspondent credibility, corporate comms execution, and deep geopolitical expertise — someone who knows how to find the real story and shape it for the audience that matters."
+  </div>
+
+  <h3>The Three-Act Career Story</h3>
+  <div style="background: #fafafa; border: 1px solid #d9d9d9; padding: 20px; margin: 16px 0;">
+    <div style="margin-bottom: 16px;">
+      <strong style="color: #c00;">Act 1: The Foundation</strong> — International Storytelling Under Pressure<br>
+      <span style="color: #555; font-size: 0.88rem;">"I spent seven years as a foreign correspondent in Beijing for the NYT and FT. My job was to take enormously complex dynamics and make them legible to global audiences — on deadline, with real consequences for getting it wrong."</span>
+    </div>
+    <div style="margin-bottom: 16px;">
+      <strong style="color: #1a1a1a;">Act 2: The Pivot</strong> — Journalistic Rigor Meets Organizational Comms<br>
+      <span style="color: #555; font-size: 0.88rem;">"I brought those skills into corporate and public-sector communications in Toronto. The core skill — making complex things clear for specific audiences — is identical. The difference is that in comms, you also get to shape the story."</span>
+    </div>
+    <div>
+      <strong style="color: #2a7a2a;">Act 3: The Convergence</strong> — Where It All Comes Together<br>
+      <span style="color: #555; font-size: 0.88rem;">"Today I sit at the intersection of media and communications. I understand how journalists think because I am one. I understand how organizations communicate because I've done that work. And I have deep expertise in one of the most consequential geopolitical stories of our era."</span>
+    </div>
+  </div>
+
+  <h3>LinkedIn Optimization</h3>
+  <table>
+    <thead><tr><th>Element</th><th>Current</th><th>Recommended</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Headline</strong></td>
+        <td>2025/26 William Southam Journalism Fellow at Massey College</td>
+        <td>"Communications Leader | Former NYT & FT Beijing Correspondent | Massey College Fellow"</td>
+      </tr>
+      <tr>
+        <td><strong>Summary</strong></td>
+        <td>Journalism-focused narrative</td>
+        <td>The three-act story above, ending with comms-forward positioning</td>
+      </tr>
+      <tr>
+        <td><strong>Open to Work</strong></td>
+        <td>Unknown</td>
+        <td>Turn on for recruiters only. Titles: Communications Director, Managing Editor, Content Strategy, Media Relations</td>
+      </tr>
+      <tr>
+        <td><strong>Featured</strong></td>
+        <td>Unknown</td>
+        <td>Pin: NYT front-page stories, Globe DeepSeek piece, "Canadian Niceness" essay (when published)</td>
+      </tr>
+      <tr>
+        <td><strong>Activity</strong></td>
+        <td>Unknown</td>
+        <td>Post 2–3x/week: China comms insights, lessons from journalism for comms pros</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>"I Ask Good Questions" — Translated to Business Value</h3>
+  <div class="card" style="margin: 16px 0;">
+    <div class="detail" style="font-size: 0.9rem; line-height: 1.7;">
+      <p><strong>In interviews, say:</strong> "The most valuable thing I bring is diagnostic listening. In journalism, the story you think you're covering is almost never the real story — you find it by asking better questions. I bring that same discipline to communications work. Before I write a strategy, I interview stakeholders the way I'd interview a source. Before I draft messaging, I pressure-test it the way an editor would challenge a headline."</p>
+      <p style="margin-top: 8px;"><strong>On the resume:</strong> "Brings a journalist's diagnostic rigor to organizational communications — surfacing the real story before shaping the narrative."</p>
+    </div>
+  </div>
+
+  <h3>The "Canadian Niceness" Intellectual Project</h3>
+  <div class="card" style="margin: 16px 0;">
+    <div class="detail" style="font-size: 0.9rem; line-height: 1.7;">
+      <p>This is not a side project — it's a strategic asset. 64% of recruiters prefer candidates with thought leadership presence.</p>
+      <ul style="padding-left: 20px; margin-top: 8px;">
+        <li><strong>In interviews:</strong> "I'm working on a long-form essay about the myth and reality of 'Canadian Niceness' and what it means for how Canada presents itself on the world stage. It grows from my experience covering how nations construct their public narratives — first in China, now in Canada."</li>
+        <li><strong>Pitch to:</strong> The Walrus, Maclean's, Globe and Mail opinion</li>
+        <li><strong>Speaking:</strong> Toronto International Festival of Authors, Canada 2020, Public Policy Forum</li>
+        <li><strong>The frame:</strong> Owen is "a communications strategist who studies how nations build and manage their public narratives" — that is a VP-of-Comms-caliber intellectual project.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Quick-Win Certifications</h3>
+  <table>
+    <thead><tr><th>Certification</th><th>Cost</th><th>Time</th><th>Signal</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://academy.hubspot.com/courses/content-marketing" target="_blank">HubSpot Content Marketing</a></td><td>Free</td><td>1 day</td><td>High — widely recognized for content roles</td></tr>
+      <tr><td>Semrush SEO Certification</td><td>Free</td><td>1–2 days</td><td>High — demonstrates data/analytics fluency</td></tr>
+      <tr><td>Google Analytics 4 Certification</td><td>Free</td><td>1–2 days</td><td>Medium — table stakes for digital content roles</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- ACTION PLAN -->
+<!-- ============================================================ -->
+<section id="actions">
+  <h2>30-Day Action Plan</h2>
+
+  <details open>
+    <summary style="color: #c00;">This Week — Critical Foundation</summary>
+    <div class="details-body">
+      <ul class="checklist">
+        <li><strong>Fix the resume.</strong> Merge into single reverse-chronological format. Reframe journalism bullets in comms language. Add professional summary.</li>
+        <li><strong>Call Susan Rogers at SRERC</strong> — the top comms-only recruiter in Canada. 416-995-4149.</li>
+        <li><strong>Message Bill Bishop</strong> about career goals. Ask for 2–3 introductions to Sinocism subscribers in corporate leadership.</li>
+        <li><strong>Update LinkedIn headline</strong> from journalism-focused to comms-forward. Turn on "Open to Work" for recruiters only.</li>
+        <li><strong>Apply to U of T Senior Communications Officer</strong> role (deadline Mar 29) — you're already at Massey College.</li>
+        <li><strong>Apply to City of Toronto Senior Communications Advisor</strong> role ($102K–$136K).</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary style="color: #1a1a1a;">Week 2 — Activate the Network</summary>
+    <div class="details-body">
+      <ul class="checklist">
+        <li>Register with <strong>Creative Niche</strong> and <strong>Robert Half</strong>. Follow up with personalized outreach.</li>
+        <li>Reach out to <strong>5 former NYT Beijing bureau colleagues</strong> for informational conversations.</li>
+        <li>Email <strong>Massey College and Munk School alumni offices</strong> — request directories and upcoming events.</li>
+        <li>Register for <strong>IABC/Toronto bootcamp (March 28)</strong>.</li>
+        <li>Pitch a China analysis piece to <strong>Globe and Mail foreign desk</strong>.</li>
+        <li>Identify <strong>3 RBC contacts</strong> who can introduce you to comms leaders at other banks.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary style="color: #333;">Weeks 3–4 — Build Momentum</summary>
+    <div class="details-body">
+      <ul class="checklist">
+        <li>Publish <strong>first LinkedIn thought leadership post</strong> on China communications strategy.</li>
+        <li>Complete <strong>HubSpot Content Marketing certification</strong> (free, 1 day).</li>
+        <li>Schedule <strong>3–4 informational interviews per week</strong> with comms leaders at target companies.</li>
+        <li>Apply to <strong>Asia Pacific Foundation of Canada</strong> and any open think tank roles.</li>
+        <li>Use <a href="https://www.jobscan.co/" target="_blank">Jobscan</a> to check ATS match scores before every application.</li>
+        <li>Set up <strong>GC Jobs alerts</strong> for IS-04 to IS-06 comms roles in the GTA.</li>
+        <li>Pitch <strong>"Canadian Niceness" essay</strong> to The Walrus or Globe and Mail opinion.</li>
+        <li>Register for <strong>IABC World Conference (June 14–16, Toronto)</strong>.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary style="color: #555;">Months 2–3 — Expand & Convert</summary>
+    <div class="details-body">
+      <ul class="checklist">
+        <li>Target <strong>10–15 applications</strong> across the five pathways, prioritizing warm introductions over cold applications.</li>
+        <li>Consider launching a free <strong>China-Canada Briefing newsletter</strong> (even biweekly). Cross-promote via Sinocism.</li>
+        <li>Apply for <strong>Pulitzer Center reporting grants</strong> — fund self-directed China reporting.</li>
+        <li>Explore <strong>US remote roles</strong> at Big Tech companies (Anthropic, OpenAI, Google, Ramp, Hinge).</li>
+        <li>Check <strong>Rhodium Group, Trivium China, Eurasia Group</strong> for open positions.</li>
+        <li>Post on LinkedIn <strong>2–3x/week</strong> consistently.</li>
+        <li>Follow up with every recruiter monthly.</li>
+      </ul>
+    </div>
+  </details>
+
+  <h3 style="margin-top: 36px;">Job Board Bookmarks</h3>
+  <table>
+    <thead><tr><th>Board</th><th>Best For</th><th>Link</th></tr></thead>
+    <tbody>
+      <tr><td>LinkedIn Jobs — Toronto Comms</td><td>Largest volume, Director-level roles</td><td><a href="https://ca.linkedin.com/jobs/communications-jobs-toronto-on" target="_blank">Search →</a></td></tr>
+      <tr><td>Jeff Gaulin's Job Board</td><td>Canada's #1 media/comms job board</td><td><a href="https://www.jeffgaulin.com/" target="_blank">Search →</a></td></tr>
+      <tr><td>U of T Careers</td><td>University comms/media relations roles</td><td><a href="https://jobs.utoronto.ca/" target="_blank">Search →</a></td></tr>
+      <tr><td>City of Toronto Jobs</td><td>Municipal government comms</td><td><a href="https://jobs.toronto.ca/jobsatcity/" target="_blank">Search →</a></td></tr>
+      <tr><td>GC Jobs (Federal)</td><td>Federal IS-classification comms roles</td><td><a href="https://www.canada.ca/en/services/jobs/opportunities/government.html" target="_blank">Search →</a></td></tr>
+      <tr><td>Ontario Public Service</td><td>Provincial comms roles</td><td><a href="https://www.gojobs.gov.on.ca/" target="_blank">Search →</a></td></tr>
+      <tr><td>Glassdoor — Toronto</td><td>Salary data + reviews</td><td><a href="https://www.glassdoor.ca/Job/toronto-communications-jobs-SRCH_IL.0,7_IC2281069_KO8,22.htm" target="_blank">Search →</a></td></tr>
+      <tr><td>Built In Toronto</td><td>Tech company comms roles</td><td><a href="https://builtintoronto.com/jobs/marketing/search/communications" target="_blank">Search →</a></td></tr>
+      <tr><td>On Think Tanks Job Board</td><td>Think tank roles globally</td><td><a href="https://onthinktanks.org/jobsboard/" target="_blank">Search →</a></td></tr>
+      <tr><td>AAS Career Center</td><td>Asia studies / China-specific roles</td><td><a href="https://careers.asianstudies.org/jobs/" target="_blank">Search →</a></td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top: 36px;">Key Contacts</h3>
+  <table>
+    <thead><tr><th>Who</th><th>Why</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Susan Rogers (SRERC)</strong></td><td>Only comms-specialty recruiter in Canada</td><td>Call: 416-995-4149</td></tr>
+      <tr><td><strong>Bill Bishop (Sinocism)</strong></td><td>400K subscribers of senior decision-makers</td><td>Ask for introductions</td></tr>
+      <tr><td><strong>Globe & Mail Foreign Editor</strong></td><td>Gateway to China correspondent dream</td><td>Pitch China stories</td></tr>
+      <tr><td><strong>Former NYT Beijing colleagues</strong></td><td>Many now in VP-level corporate comms</td><td>Informational coffees</td></tr>
+      <tr><td><strong>Munk School alumni office</strong></td><td>Network in government, policy, int'l business</td><td>Request directory + events</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Footer -->
+<div style="padding: 40px 0; text-align: center; color: #888; font-size: 0.78rem; border-top: 2px solid #1a1a1a; margin-top: 20px;">
+  <p style="margin-top: 16px;">Built with care. Data sourced from LinkedIn, Glassdoor, Indeed, Salary.com, ZipRecruiter, SalaryExpert, Robert Half, company career pages, and journalism industry research. All links verified active as of March 17, 2026.</p>
+  <p style="margin-top: 8px; color: #c00; font-style: italic;">"Owen's background is not a confused resume. It's a superpower."</p>
+</div>
+
+</div><!-- /container -->
+<script>
+(function() {
+  var img = new Image();
+  img.onload = function() {
+    var c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    var ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0, 32, 32);
+    var url = c.toDataURL('image/png');
+    document.documentElement.style.setProperty('--cat-cursor', 'url(' + url + ') 16 16, auto');
+  };
+  img.src = 'cat.png';
+})();
+</script>
+</body>
+</html>
