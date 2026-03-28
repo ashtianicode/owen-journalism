@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owen Guo — Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:wght@400;700;900&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --text: #1a1a1a; --dim: #666; --accent: #c00; --border: #d9d9d9; --blue: #1a5276; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: #e0e0e0; }
+  body { font-family: 'Noto Serif', Georgia, serif; color: var(--text); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .page { width: 8.5in; height: 11in; background: #fff; margin: 0 auto; position: relative; overflow: hidden; }
+  .pi { padding: 48px 56px 40px; }
+
+  .name { font-family: 'UnifrakturMaguntia', serif; font-size: 3.2rem; font-weight: 400; letter-spacing: 0.02em; line-height: 1.1; text-align: center; margin-bottom: 10px; }
+
+  .contact { text-align: center; font-family: system-ui, -apple-system, sans-serif; font-size: 0.8rem; color: var(--dim); padding-bottom: 16px; border-bottom: 2px solid var(--text); }
+  .contact .c-city { color: var(--accent); font-weight: 600; }
+  .contact a.c-email { color: var(--blue); text-decoration: none; border-bottom: 1px solid #a0c4d8; font-weight: 500; }
+  .contact a.c-linkedin { color: #0a66c2; text-decoration: none; border-bottom: 1px solid #a0c4d8; font-weight: 500; }
+  .sep { margin: 0 9px; color: #ccc; }
+
+  .sh { font-family: system-ui, -apple-system, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-top: 22px; padding: 5px 0 4px; border-bottom: 1px solid var(--border); }
+
+  .summary { font-style: italic; font-size: 0.94rem; line-height: 1.6; color: #333; margin: 14px 0 4px; }
+
+  .job { margin-top: 16px; }
+  .jt { font-family: 'Playfair Display', Georgia, serif; font-size: 1.02rem; font-weight: 700; line-height: 1.25; display: flex; align-items: center; gap: 8px; }
+  .jo { font-family: system-ui, -apple-system, sans-serif; font-size: 0.76rem; color: var(--dim); margin-top: 1px; padding-left: 38px; }
+  .job ul { margin: 5px 0 0 17px; }
+  .job li { font-size: 0.86rem; line-height: 1.5; color: #333; margin-bottom: 2px; }
+  .job li::marker { color: #bbb; font-size: 0.65em; }
+
+  /* Logo — clean, no borders, ~30% bigger */
+  .logo { width: 30px; height: 30px; border-radius: 5px; object-fit: contain; flex-shrink: 0; }
+  .logo-edu { width: 28px; height: 28px; border-radius: 5px; object-fit: contain; flex-shrink: 0; margin-top: 1px; }
+  .logo-pub { width: 22px; height: 22px; border-radius: 4px; object-fit: contain; vertical-align: -4px; margin-right: 4px; }
+
+  .p1grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+  .p1grid .job { margin-top: 14px; }
+  .p1grid .jt { font-size: 0.96rem; }
+  .p1grid .jo { font-size: 0.74rem; padding-left: 36px; }
+  .p1grid .job li { font-size: 0.83rem; line-height: 1.45; }
+  .p1grid .logo { width: 28px; height: 28px; }
+
+  .p2grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 28px; }
+  .p2grid .job { margin-top: 20px; }
+  .p2grid .jt { font-size: 1.02rem; }
+  .p2grid .jo { font-size: 0.76rem; padding-left: 38px; }
+  .p2grid .job li { font-size: 0.87rem; line-height: 1.52; margin-bottom: 3px; }
+
+  .edugrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 28px; margin-top: 14px; }
+  .ee { font-size: 0.9rem; line-height: 1.4; display: flex; align-items: flex-start; gap: 7px; }
+  .ee strong { font-weight: 700; }
+  .es { color: var(--dim); font-family: system-ui, -apple-system, sans-serif; font-size: 0.76rem; }
+
+  .pubgrid { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; list-style: none; }
+  .pubgrid li { font-size: 0.92rem; line-height: 1.45; display: flex; align-items: baseline; gap: 0; }
+  .pubgrid li a { color: var(--text); text-decoration: none; border-bottom: 1px solid #ccc; }
+  .po { font-family: system-ui, -apple-system, sans-serif; font-size: 0.72rem; color: var(--dim); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+
+  .pf { position: absolute; bottom: 26px; left: 56px; right: 56px; text-align: center; font-family: system-ui, -apple-system, sans-serif; font-size: 0.56rem; color: #bbb; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ PAGE 1 ══════════ -->
+<div class="page"><div class="pi">
+  <div class="name">Owen Guo</div>
+  <div class="contact">
+    <span class="c-city">Toronto, Canada</span><span class="sep">|</span><span>+1 437-226-4456</span><span class="sep">|</span><a class="c-email" href="mailto:wordsmith.guo@alumni.utoronto.ca">wordsmith.guo@alumni.utoronto.ca</a><span class="sep">|</span><a class="c-linkedin" href="https://linkedin.com/in/owenguo/">linkedin.com/in/owenguo</a>
+  </div>
+
+  <div class="sh">Summary</div>
+  <p class="summary">Senior communications officer with 10+ years in strategic communications, editorial strategy and storytelling. Former reporter at the <span style="border-bottom:2px solid #1a1a1a; padding-bottom:1px;"><img src="logos/nytimes-icon.png" style="width:15px;height:15px;vertical-align:-3px;margin-right:2px;border-radius:2px;">New York Times</span> and <span style="border-bottom:2px solid #e8c4a0; padding-bottom:1px;"><svg viewBox="0 0 24 16" width="22" height="15" style="vertical-align:-3px; margin-right:1px;"><rect width="24" height="16" rx="2" fill="#fff1e5"/><text x="3" y="12.5" font-family="'Georgia',serif" font-size="11" font-weight="700" fill="#1a1a1a">FT</text></svg>Financial Times</span> with a proven ability to package and manage digital content for diverse organizations. Currently a 2025–26 Journalism Fellow at Massey College, <span style="border-bottom:2px solid #002a5c; padding-bottom:1px;"><svg viewBox="0 0 16 16" width="15" height="15" style="vertical-align:-3px; margin-right:2px;"><circle cx="8" cy="8" r="7.5" fill="#002a5c"/><text x="4.5" y="12" font-family="'Georgia',serif" font-size="10" font-weight="700" fill="#fff">U</text></svg>University of Toronto</span>.</p>
+
+  <div class="sh">Communications Experience</div>
+  <div class="job">
+    <div class="jt"><img class="logo" src="logos/legal-aid-ontario.svg" alt="">Senior Media Relations Advisor</div>
+    <div class="jo">Legal Aid Ontario — 2023–2025</div>
+    <ul><li>Managed media relations and developed key messaging for executives</li><li>Provided communications counsel to senior leadership on high-profile matters</li><li>Supported issues management across the organization</li></ul>
+  </div>
+  <div class="job">
+    <div class="jt"><img class="logo" src="logos/rbc.svg" alt="">Lead Content Strategist</div>
+    <div class="jo">RBC Direct Investing — 2022–2023</div>
+    <ul><li>Oversaw editorial strategy and content auditing for digital platforms</li><li>Partnered cross-functionally with product and UX teams to refine content</li><li>Optimized content for SEO and user engagement</li></ul>
+  </div>
+  <div class="job">
+    <div class="jt"><img class="logo" src="logos/triec.png" alt="">Content &amp; Media Relations Manager</div>
+    <div class="jo">TRIEC (Toronto Region Immigrant Employment Council) — 2021–2022</div>
+    <ul><li>Initiated media outreach campaigns to amplify brand recognition</li><li>Partnered with research staff to draft media-ready stories on immigrant employment</li><li>Delivered media training and writing workshops to internal teams</li></ul>
+  </div>
+
+  <div class="sh">Reporting Experience</div>
+  <div class="p1grid">
+    <div class="job">
+      <div class="jt"><img class="logo" src="logos/globe-and-mail-icon.png" alt="">Freelance Reporter</div>
+      <div class="jo">Toronto — 2018–Present</div>
+      <ul><li>Contributing writer for <em>The Globe and Mail</em> and <em>Toronto Star</em></li><li>Contributing writer for <em>Sinocism</em> newsletter (400K+ subscribers)</li><li>Contributing writer for Wealthsimple's <em>TLDR</em> and <em>MaRS</em></li></ul>
+    </div>
+    <div class="job">
+      <div class="jt"><img class="logo" src="logos/nytimes-icon.png" alt="">Reporter &amp; Researcher</div>
+      <div class="jo">The New York Times, Beijing — 2015–2018</div>
+      <ul><li>Researcher and reporter on the business desk</li><li>Authored four front-page stories in print</li></ul>
+    </div>
+  </div>
+</div><div class="pf">Owen Guo — 1 / 2</div></div>
+
+<!-- ══════════ PAGE 2 ══════════ -->
+<div class="page"><div class="pi">
+  <div class="sh" style="margin-top:0">Reporting Experience <span style="font-weight:400;color:#999;letter-spacing:0.04em;font-size:0.58rem">(continued)</span></div>
+  <div class="p2grid">
+    <div class="job">
+      <div class="jt"><img class="logo" src="logos/ft-icon.png" alt="">Assistant Reporter</div>
+      <div class="jo">Financial Times, Beijing — 2014–2015</div>
+      <ul><li>Covered the energy sector (oil and gas) and environmental issues</li><li>Cultivated sources in government and academia</li></ul>
+    </div>
+    <div class="job">
+      <div class="jt"><img class="logo" src="logos/global-voices-icon.png" alt="">Contributing Writer</div>
+      <div class="jo">Global Voices, Beijing — 2013–2020</div>
+      <ul><li>Covered China's foreign policy, politics, and social trends</li></ul>
+    </div>
+    <div class="job">
+      <div class="jt"><img class="logo" src="logos/nos-icon.png" alt="">News Producer</div>
+      <div class="jo">NOS News (Dutch broadcaster), Beijing — 2012–2013</div>
+      <ul><li>Produced news segments and managed video production</li><li>Coordinated bureau operation and reporting logistics</li></ul>
+    </div>
+    <div class="job">
+      <div class="jt"><img class="logo" src="logos/mcclatchy-icon.png" alt="">News Assistant</div>
+      <div class="jo">McClatchy Newspapers, Beijing — 2011–2012</div>
+      <ul><li>Supported field reporting and provided Chinese-English translation</li><li>Covered a major civic unrest in Guangdong province</li></ul>
+    </div>
+  </div>
+
+  <div class="sh" style="margin-top:28px">Education</div>
+  <div class="edugrid">
+    <div class="ee"><img class="logo-edu" src="logos/massey-college-icon.png" alt=""><div><strong>Journalism Fellow</strong> <span class="es">— Massey College (2025–2026)</span></div></div>
+    <div class="ee"><img class="logo-edu" src="logos/uoft.svg" alt=""><div><strong>M.A. Global Affairs</strong> <span class="es">— University of Toronto (2018–2020)</span></div></div>
+    <div class="ee"><img class="logo-edu" src="logos/sisu.png" alt=""><div><strong>M.A. Communications Studies</strong> <span class="es">— Shanghai International Studies University (2009–2012)</span></div></div>
+    <div class="ee"><svg class="logo-edu" viewBox="0 0 28 28" width="28" height="28"><circle cx="14" cy="14" r="13.5" fill="#2e7d32"/><text x="7.5" y="20" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#fff">J</text></svg><div><strong>B.A. Tourism Management</strong> <span class="es">— Jiangxi Agricultural University (2005–2009)</span></div></div>
+  </div>
+
+  <div class="sh" style="margin-top:28px">Select Publications</div>
+  <ul class="pubgrid">
+    <li><img class="logo-pub" src="logos/nytimes-icon.png" alt=""><a href="#">Chinese Investment Scandal Highlights 'Shadow Banking' Risks</a><span class="po">&ensp;New York Times</span></li>
+    <li><img class="logo-pub" src="logos/nytimes-icon.png" alt=""><a href="#">Aiming at China's Armpits: When Foreign Brands Misfire</a><span class="po">&ensp;New York Times</span></li>
+    <li><img class="logo-pub" src="logos/bbc-icon.png" alt=""><a href="#">The Chinese Millennials Shunning Lunar New Year Travel</a><span class="po">&ensp;BBC</span></li>
+    <li><img class="logo-pub" src="logos/globe-and-mail-icon.png" alt=""><a href="#">How DeepSeek Disrupted Western AI and Sank the Markets</a><span class="po">&ensp;Globe &amp; Mail</span></li>
+    <li><img class="logo-pub" src="logos/toronto-star-icon.png" alt=""><a href="#">What Artificial Intelligence Means for Higher Education</a><span class="po">&ensp;Toronto Star</span></li>
+    <li><img class="logo-pub" src="logos/ctv-news-icon.png" alt=""><a href="#">High-Stakes Battlegrounds: Ridings That Could Shape the 2025 Election</a><span class="po">&ensp;CTV News</span></li>
+    <li><img class="logo-pub" src="logos/wealthsimple-icon.png" alt=""><a href="#">Is Canada About to Spend Big on Its Military? Maybe!</a><span class="po">&ensp;Wealthsimple</span></li>
+    <li><img class="logo-pub" src="logos/thehub-icon.png" alt=""><a href="#">Why I'm Voting in a Canadian Election for the First Time</a><span class="po">&ensp;The Hub</span></li>
+  </ul>
+</div><div class="pf">Owen Guo — 2 / 2</div></div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/legalaidontario.on.ca?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/rbc.com?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/triec.ca?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/theglobeandmail.com?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/nytimes.com?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/ft.com?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/ctvnews.ca?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/thehub.ca?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/bbc.com?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/jxau.edu.cn?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/wealthsimple.com?size=80:0
+[      91ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/thestar.com?size=80:0
+[      97ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/nos.nl?size=80:0
+[      97ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/mcclatchydc.com?size=80:0
+[      99ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/globalvoices.org?size=80:0
+[      99ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/masseycollege.ca?size=80:0
+[      99ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/shisu.edu.cn?size=80:0
+[      99ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://logo.clearbit.com/utoronto.ca?size=80:0
+[     102ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8799/favicon.ico:0
